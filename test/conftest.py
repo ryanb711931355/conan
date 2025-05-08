@@ -48,7 +48,7 @@ windows_choco_root = "C:/ProgramData/chocolatey/lib/"
 msys2_path = os.getenv("MSYS2_PATH", "C:/msys64")
 
 tools_locations = {
-    "clang": {"disabled": True},
+    "clang": {},
     'visual_studio': {"default": "15",
                       "15": {},
                       "16": {"disabled": True},
@@ -101,7 +101,6 @@ tools_locations = {
     },
     # This is the non-msys2 mingw, which is 32 bits x86 arch
     'mingw': {
-        "disabled": True,
         "platform": "Windows",
         "default": "system",
         "exe": "mingw32-make",
@@ -114,7 +113,6 @@ tools_locations = {
         "system": {"path": {'Windows': f"{msys2_path}/mingw32/bin"}},
     },
     'ucrt64': {
-        "disabled": True,
         "platform": "Windows",
         "default": "system",
         "exe": "mingw32-make",
@@ -133,14 +131,12 @@ tools_locations = {
         "system": {"path": {'Windows': f"{msys2_path}/usr/bin"}},
     },
     'msys2_clang64': {
-        "disabled": True,
         "platform": "Windows",
         "default": "system",
         "exe": "clang",
         "system": {"path": {'Windows': f"{msys2_path}/clang64/bin"}},
     },
     'msys2_mingw64_clang64': {
-        "disabled": True,
         "platform": "Windows",
         "default": "system",
         "exe": "clang",
