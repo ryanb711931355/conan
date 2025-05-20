@@ -83,12 +83,14 @@ class TestGitBasicCapture:
             c.run("export .")
             assert "pkg/0.1: COMMIT: {}".format(new_commit) in c.out
             assert "pkg/0.1: URL: {}".format(url) in c.out
+            # The commit is local only, not yet pushed to remote
             assert "pkg/0.1: COMMIT IN REMOTE: False" in c.out
             assert "pkg/0.1: DIRTY: False" in c.out
             c.run_command("git push")
             c.run("export .")
             assert "pkg/0.1: COMMIT: {}".format(new_commit) in c.out
             assert "pkg/0.1: URL: {}".format(url) in c.out
+            # After push, the commit is in remote
             assert "pkg/0.1: COMMIT IN REMOTE: True" in c.out
             assert "pkg/0.1: DIRTY: False" in c.out
 
@@ -226,10 +228,12 @@ class TestGitCaptureSCM:
             assert "This revision will not be buildable in other computer" in c.out
             assert "pkg/0.1: SCM COMMIT: {}".format(new_commit) in c.out
             # NOTE: commit not pushed yet, so locally is the current folder
+            # The SCM URL should point to the local folder when not pushed
             assert "pkg/0.1: SCM URL: {}".format(c.current_folder.replace("\\", "/")) in c.out
             c.run_command("git push")
             c.run("export .")
             assert "pkg/0.1: SCM COMMIT: {}".format(new_commit) in c.out
+            # After push, the SCM URL should be the remote URL
             assert "pkg/0.1: SCM URL: {}".format(url) in c.out
 
     def test_capture_commit_modified_config(self):
@@ -919,6 +923,7 @@ class TestGitMonorepoSCMFlow:
         assert "pkg1/0.1: MYFILE-BUILD: myheader1!" in c.out
 
         c.save({"sub2/src/myfile.h": "my2header!"})
+        # Ensure we are in the correct folder for git operations
         git_add_changes_commit(folder=c.current_folder)
         c.run("create sub2")
         assert "pkg2/0.1: MYCMAKE-BUILD: mycmake2!" in c.out

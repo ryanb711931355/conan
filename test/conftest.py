@@ -252,14 +252,14 @@ def _get_individual_tool(name, version):
         return None, None
 
     version = version or tool.get("default")
-    tool_version = tool.get(version)
+    tool_version = tool.get(name, {}).get(version)
     if tool_version is not None:
         assert isinstance(tool_version, dict)
         if tool_version.get("disabled"):
             return False
         if name == "visual_studio":
             if vswhere():  # TODO: Missing version detection
-                return None, None
+                return False
 
         tool_path = tool_version.get("path", {}).get(tool_platform)
         tool_path = tool_path.replace("/", "\\") if tool_platform == "Windows" and tool_path is not None else tool_path
