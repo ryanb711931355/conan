@@ -39,7 +39,7 @@ class PackagesDBTable(BaseDbTable):
             self.columns.prev: pref.revision,
         }
         where_expr = ' AND '.join(
-            [f"{k}='{v}' " if v is not None else f'{k} IS NULL' for k, v in where_dict.items()])
+            [f"{k}='{v}' " if v is not None and isinstance(v, str) else f"{k}={v} " if v is not None else f'{k} IS NULL' for k, v in where_dict.items()])
         return where_expr
 
     def _set_clause(self, pref: PkgReference, path=None, build_id=None):
@@ -52,7 +52,7 @@ class PackagesDBTable(BaseDbTable):
             self.columns.timestamp: pref.timestamp,
             self.columns.build_id: build_id,
         }
-        set_expr = ', '.join([f"{k} = '{v}'" for k, v in set_dict.items() if v is not None])
+        set_expr = ', '.join([f"{k} = '{v}'" if isinstance(v, str) else f"{k} = {v}" for k, v in set_dict.items() if v is not None])
         return set_expr
 
     def get(self, pref: PkgReference):
@@ -107,7 +107,7 @@ class PackagesDBTable(BaseDbTable):
         where_clause = self._where_clause(pref)
         lru = timestamp_now()
         query = f"UPDATE {self.table_name} " \
-                f"SET {self.columns.lru} = '{lru}' " \
+                f"SET {self.columns.lru} = {lru} " \
                 f"WHERE {where_clause};"
         with self.db_connection() as conn:
             conn.execute(query)
@@ -115,7 +115,7 @@ class PackagesDBTable(BaseDbTable):
     def remove_build_id(self, pref):
         where_clause = self._where_clause(pref)
         query = f"UPDATE {self.table_name} " \
-                f"SET {self.columns.build_id} = 'null' " \
+                f"SET {self.columns.build_id} = NULL " \
                 f"WHERE {where_clause};"
         with self.db_connection() as conn:
             try:

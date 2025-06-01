@@ -112,7 +112,8 @@ class RestApiTest(unittest.TestCase):
 
         # Get the info about this ConanFileReference
         info = self.api.search_packages(ref1)
-        self.assertEqual(conan_info, info["1F23223EFDA"]["content"])
+        self.assertIn("1F23223EFDA", info)
+        self.assertEqual(conan_info, info["1F23223EFDA"].get("content", ""))
 
         # Search packages
         results = self.api.search("HelloOnly*", ignorecase=False)

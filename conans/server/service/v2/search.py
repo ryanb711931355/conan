@@ -20,7 +20,7 @@ def _get_local_infos_min(server_store, ref, list_only):
         if package_id in result:
             continue
         if list_only:
-            result[package_id] = {}
+            result[package_id] = {"content": ""}
             continue
         # Read conaninfo
         pref = PkgReference(new_ref, package_id)

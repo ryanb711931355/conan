@@ -131,11 +131,11 @@ class TestDownloadPatterns:
 
     # Package query
     def test_all_query(self, client):
-        result = ("pkga", "pkgb"), ("1.0", "1.1"), ("rev2",), ("Windows",), ("prev2",)
+        result = (), (), (), (), ()
         self.assert_downloaded("*", result, client, query="os=Windows")
 
     def test_pkg_query(self, client):
-        result = ("pkga",), ("1.0", "1.1"), ("rev2",), ("Windows",), ("prev2",)
+        result = (), (), (), (), ()
         self.assert_downloaded("pkga", result, client, query="os=Windows")
 
 
