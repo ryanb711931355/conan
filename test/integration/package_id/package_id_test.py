@@ -74,6 +74,10 @@ def test_value_parse():
     client.run("install --requires=test/0.1")
     client.run("list *:*")
     assert "arch: kk=kk" in client.out
+    client.run("remove * -c")
+    client.run("install --requires=test/0.1")
+    client.run("list *:*")
+    assert "arch: kk=kk" in client.out
 
 
 def test_option_in():
