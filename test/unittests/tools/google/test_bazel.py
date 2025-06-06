@@ -4,7 +4,6 @@ import pytest
 
 from conan.test.utils.mocks import ConanFileMock
 from conan.tools.google import Bazel
-from conan.tools.google.bazeldeps import _relativize_path
 
 
 @pytest.mark.skipif(platform.system() == "Windows", reason="Remove this skip for Conan 2.x"
