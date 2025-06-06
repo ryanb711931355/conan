@@ -222,6 +222,28 @@ class _BazelDepBuildGenerator:
                 return path_.strip("./") or "./"
         return path
 
+
+def _relativize_path(path, package_folder):
+    """
+    Module-level helper to relativize a path with regard to the package folder.
+
+    :param path: absolute or relative path
+    :param package_folder: the package folder path
+    :return: Unix-like path relative if matches to the given pattern.
+             Otherwise, it returns the original path.
+    """
+    if not path:
+        return path
+    path_ = path.replace("\\", "/").replace("/./", "/")
+    pattern_ = package_folder.replace("\\", "/").replace("/./", "/")
+    match = re.match(pattern_, path_)
+    if match:
+        matching = match[0]
+        if path_.startswith(matching):
+            path_ = path_.replace(matching, "").strip("/")
+            return path_.strip("./") or "./"
+    return path
+
     def _get_component_requirement_names(self, cpp_info):
         """
         Get all the valid names from the requirements ones given a CppInfo object.
