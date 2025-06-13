@@ -254,7 +254,7 @@ def _get_individual_tool(name, version):
         return None, None
 
     version = version or tool.get("default")
-    tool_version = tool.get(version)
+    tool_version = tools_environments.get(version)
     if tool_version is not None:
         assert isinstance(tool_version, dict)
         if tool_version.get("disabled"):
@@ -296,13 +296,12 @@ def _get_individual_tool(name, version):
     exe_found = which(exe)  # TODO: This which doesn't detect version either
     exe_path = str(pathlib.Path(exe_found).parent) if exe_found else None
     if not exe_found:
-        cached = True
         if tool_path is None:
             # will fail the test, not exe found and path None
-            cached = True
+            return True
     elif tool_path is not None and tool_path not in exe_found:
         # finds the exe in a path that is not the one set in the conf -> fail
-        cached = True
+        return True
     elif tool_path is None:
         cached = exe_path, tool_env
 
@@ -355,6 +354,9 @@ def pytest_runtest_setup(item):
             version_msg = "Any" if tool_version is None else tool_version
             pytest.skip("Required '{}' tool version '{}' is not available".format(tool_name,
                                                                                   version_msg))
+
+        if result is True:
+            pytest.fail("Required '{}' tool is not available".format(tool_name))
 
         tool_path, tool_env = result
         if tool_path:
