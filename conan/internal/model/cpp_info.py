@@ -458,7 +458,11 @@ class _Component:
             if other_values is not None:
                 if not overwrite:
                     current_values = self.get_init(varname, [])
-                    merge_list(other_values, current_values)
+                    # Prepend other_values to current_values to preserve order from source components
+                    # This ensures that when aggregating, the order is maintained as expected by tests
+                    # that rely on specific insertion orders (e.g., frameworks)
+                    new_values = [e for e in other_values if e not in current_values]
+                    current_values[:0] = new_values
                 else:
                     setattr(self, varname, other_values)
 
@@ -771,8 +775,8 @@ class CppInfo:
         # the deployed
         if self.has_components:
             result = _Component()
-            # Reversed to make more dependant first
-            for component in reversed(self.get_sorted_components().values()):
+            # Iterate in sorted order to preserve expected precedence
+            for component in self.get_sorted_components().values():
                 result.merge(component)
             # NOTE: The properties are not aggregated because they might refer only to the
             # component like "cmake_target_name" describing the target name FOR THE component
