@@ -476,8 +476,13 @@ class _Component:
             current_values = self.get_init("_properties", {})
             for k, v in other._properties.items():
                 existing = current_values.get(k)
-                if existing is not None and isinstance(existing, list) and not overwrite:
-                    existing.extend(v)
+                if not overwrite and isinstance(v, list):
+                    if existing is None:
+                        current_values[k] = copy.copy(v)
+                    elif isinstance(existing, list):
+                        existing.extend(e for e in v if e not in existing)
+                    else:
+                        current_values[k] = copy.copy(v)
                 else:
                     current_values[k] = copy.copy(v)
 
@@ -772,7 +777,7 @@ class CppInfo:
         if self.has_components:
             result = _Component()
             # Reversed to make more dependant first
-            for component in reversed(self.get_sorted_components().values()):
+            for component in self.get_sorted_components().values():
                 result.merge(component)
             # NOTE: The properties are not aggregated because they might refer only to the
             # component like "cmake_target_name" describing the target name FOR THE component
