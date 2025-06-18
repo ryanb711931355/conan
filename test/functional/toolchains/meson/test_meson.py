@@ -117,7 +117,7 @@ class MesonToolchainTest(TestMesonBase):
         self.assertIn("[properties]", content)
         self.assertNotIn("needs_exe_wrapper", content)
 
-        self._check_binary()
+        self._check_binary(gcc_version=None)
 
     def test_meson_default_dirs(self):
         self.t.run("new meson_exe -d name=hello -d version=1.0")

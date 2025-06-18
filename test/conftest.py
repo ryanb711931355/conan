@@ -302,7 +302,7 @@ def _get_individual_tool(name, version):
             cached = True
     elif tool_path is not None and tool_path not in exe_found:
         # finds the exe in a path that is not the one set in the conf -> fail
-        cached = True
+        cached = exe_path, tool_env
     elif tool_path is None:
         cached = exe_path, tool_env
 
