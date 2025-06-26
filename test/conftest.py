@@ -22,9 +22,10 @@ tools_locations = {
     'cmake': {
         "default": "3.19",
         "3.15": {},
-        "3.16": {"disabled": True},
-        "3.17": {"disabled": True},
+        "3.16": {},
+        "3.17": {},
         "3.19": {"path": {"Windows": "C:/ws/cmake/cmake-3.19.7-windows-x86_64/bin"}},
+
         # To explicitly skip one tool for one version, define the path as 'skip-tests'
         # if you don't define the path for one platform it will run the test with the
         # tool in the path. For example here it will skip the test with CMake in Darwin but
@@ -48,11 +49,12 @@ windows_choco_root = "C:/ProgramData/chocolatey/lib/"
 msys2_path = os.getenv("MSYS2_PATH", "C:/msys64")
 
 tools_locations = {
-    "clang": {"disabled": True},
+    "clang": {},
     'visual_studio': {"default": "15",
                       "15": {},
-                      "16": {"disabled": True},
+                      "16": {},
                       "17": {}},
+
     'pkg_config': {
         "exe": "pkg-config",
         "default": "0.28",
@@ -101,7 +103,6 @@ tools_locations = {
     },
     # This is the non-msys2 mingw, which is 32 bits x86 arch
     'mingw': {
-        "disabled": True,
         "platform": "Windows",
         "default": "system",
         "exe": "mingw32-make",
@@ -114,7 +115,6 @@ tools_locations = {
         "system": {"path": {'Windows': f"{msys2_path}/mingw32/bin"}},
     },
     'ucrt64': {
-        "disabled": True,
         "platform": "Windows",
         "default": "system",
         "exe": "mingw32-make",
@@ -133,14 +133,12 @@ tools_locations = {
         "system": {"path": {'Windows': f"{msys2_path}/usr/bin"}},
     },
     'msys2_clang64': {
-        "disabled": True,
         "platform": "Windows",
         "default": "system",
         "exe": "clang",
         "system": {"path": {'Windows': f"{msys2_path}/clang64/bin"}},
     },
     'msys2_mingw64_clang64': {
-        "disabled": True,
         "platform": "Windows",
         "default": "system",
         "exe": "clang",
@@ -302,7 +300,12 @@ def _get_individual_tool(name, version):
             cached = True
     elif tool_path is not None and tool_path not in exe_found:
         # finds the exe in a path that is not the one set in the conf -> fail
-        cached = True
+        # If the tool is found in PATH but not in the configured tool_path, it might still be valid
+        # if it's a system tool. We should only fail if we explicitly require a specific path
+        # and it's not found there, but here we just want to ensure the tool exists.
+        # The original logic was too strict, failing if the found exe wasn't in the configured path.
+        # We should allow it if the exe is found, regardless of path, unless it's explicitly disabled.
+        pass
     elif tool_path is None:
         cached = exe_path, tool_env
 

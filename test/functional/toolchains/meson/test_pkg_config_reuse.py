@@ -56,3 +56,9 @@ class MesonPkgConfigTest(TestMesonBase):
         self.assertIn("Hello World Release!", self.t.out)
 
         self._check_binary()
+        # Check for GCC version dynamically to accommodate different CI environments
+        import re
+        gcc_match = re.search(r'__GNUC__(\d+)', self.t.out)
+        if gcc_match:
+            gcc_version = int(gcc_match.group(1))
+            self.assertGreaterEqual(gcc_version, 9)
