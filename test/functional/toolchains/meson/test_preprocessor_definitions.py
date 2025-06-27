@@ -67,4 +67,4 @@ class MesonPreprocessorDefinitionsTest(TestMesonBase):
         self.assertIn("TEST_DEFINITION1: TestPpdValue1", self.t.out)
         self.assertIn("TEST_DEFINITION2: TestPpdValue2", self.t.out)
 
-        self._check_binary()
+        self._check_binary(gcc_version=None)
