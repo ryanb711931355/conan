@@ -70,33 +70,35 @@ tools_locations = {
         "3.15": {
             "path": {'Windows': 'C:/tools/cmake/3.15.7/cmake-3.15.7-win64-x64/bin',
                      'Darwin': '/Users/runner/Applications/CMake/3.15.7/bin',
-                     'Linux': '/usr/share/cmake-3.15.7/bin'}
+                     'Linux': None}
         },
         "3.19": {
             "path": {'Windows': 'C:/tools/cmake/3.19.7/cmake-3.19.7-win64-x64/bin',
                      'Darwin': '/Users/runner/Applications/CMake/3.19.7/bin',
-                     'Linux': '/usr/share/cmake-3.19.7/bin'}
+                     'Linux': None}
         },
         "3.23": {
             "path": {'Windows': 'C:/tools/cmake/3.23.5/cmake-3.23.5-windows-x86_64/bin',
                      'Darwin': '/Users/runner/Applications/CMake/3.23.5/bin',
-                     'Linux': "/usr/share/cmake-3.23.5/bin"}
+                     'Linux': None}
         },
         "3.27": {
             "path": {'Windows': 'C:/tools/cmake/3.27.9/cmake-3.27.9-windows-x86_64/bin',
                      'Darwin': '/Users/runner/Applications/CMake/3.27.9/bin',
-                     'Linux': "/usr/share/cmake-3.27.9/bin"}
+                     'Linux': None}
         },
         "4.0": {
             "path": {'Windows': 'C:/tools/cmake/4.0.0-rc3/cmake-4.0.0-rc3-windows-x86_64/bin',
                      'Darwin': '/Users/runner/Applications/CMake/4.0.0-rc3/bin',
-                     'Linux': "/usr/share/cmake-4.0.0-rc3/bin"}
+                     'Linux': None}
         }
     },
     'ninja': {
         "default": "1.10.2",
         "1.10.2": {
-            "path": {'Windows': f'{windows_choco_root}/ninja/tools'}
+            "path": {'Windows': f'{windows_choco_root}/ninja/tools',
+                     'Linux': None,
+                     'Darwin': None}
         }
     },
     # This is the non-msys2 mingw, which is 32 bits x86 arch
@@ -105,70 +107,86 @@ tools_locations = {
         "platform": "Windows",
         "default": "system",
         "exe": "mingw32-make",
-        "system": {"path": {'Windows': "C:/ProgramData/mingw64/mingw64/bin"}},
+        "system": {"path": {'Windows': "C:/ProgramData/mingw64/mingw64/bin",
+                            'Linux': None,
+                            'Darwin': None}},
     },
     'mingw32': {
         "platform": "Windows",
         "default": "system",
         "exe": "mingw32-make",
-        "system": {"path": {'Windows': f"{msys2_path}/mingw32/bin"}},
+        "system": {"path": {'Windows': f"{msys2_path}/mingw32/bin",
+                            'Linux': None,
+                            'Darwin': None}},
     },
     'ucrt64': {
         "disabled": True,
         "platform": "Windows",
         "default": "system",
         "exe": "mingw32-make",
-        "system": {"path": {'Windows': f"{msys2_path}/ucrt64/bin"}},
+        "system": {"path": {'Windows': f"{msys2_path}/ucrt64/bin",
+                            'Linux': None,
+                            'Darwin': None}},
     },
     'mingw64': {
         "platform": "Windows",
         "default": "system",
         "exe": "mingw32-make",
-        "system": {"path": {'Windows': f"{msys2_path}/mingw64/bin"}},
+        "system": {"path": {'Windows': f"{msys2_path}/mingw64/bin",
+                            'Linux': None,
+                            'Darwin': None}},
     },
     'msys2': {
         "platform": "Windows",
         "default": "system",
         "exe": "make",
-        "system": {"path": {'Windows': f"{msys2_path}/usr/bin"}},
+        "system": {"path": {'Windows': f"{msys2_path}/usr/bin",
+                            'Linux': None,
+                            'Darwin': None}},
     },
     'msys2_clang64': {
         "disabled": True,
         "platform": "Windows",
         "default": "system",
         "exe": "clang",
-        "system": {"path": {'Windows': f"{msys2_path}/clang64/bin"}},
+        "system": {"path": {'Windows': f"{msys2_path}/clang64/bin",
+                            'Linux': None,
+                            'Darwin': None}},
     },
     'msys2_mingw64_clang64': {
         "disabled": True,
         "platform": "Windows",
         "default": "system",
         "exe": "clang",
-        "system": {"path": {'Windows': f"{msys2_path}/mingw64/bin"}},
+        "system": {"path": {'Windows': f"{msys2_path}/mingw64/bin",
+                            'Linux': None,
+                            'Darwin': None}},
     },
     'cygwin': {
         "platform": "Windows",
         "default": "system",
         "exe": "make",
-        "system": {"path": {'Windows': "C:/tools/cygwin/bin"}},
+        "system": {"path": {'Windows': "C:/tools/cygwin/bin",
+                            'Linux': None,
+                            'Darwin': None}},
     },
     'bazel': {
         "default": "7",
-        "6.5.0": {"path": {'Linux': '/usr/share/bazel-6.5.0/bin',
+        "6.5.0": {"path": {'Linux': None,
                            'Windows': 'C:/tools/bazel/6.5.0',
-                           'Darwin': '/Users/runner/Applications/bazel/6.5.0'}},
-        "7.4.1": {"path": {'Linux': '/usr/share/bazel-7.4.1/bin',
+                           'Darwin': None}},
+        "7.4.1": {"path": {'Linux': None,
                            'Windows': 'C:/tools/bazel/7.4.1',
-                           'Darwin': '/Users/runner/Applications/bazel/7.4.1'}},
-        "8.0.0": {"path": {'Linux': '/usr/share/bazel-8.0.0/bin',
+                           'Darwin': None}},
+        "8.0.0": {"path": {'Linux': None,
                            'Windows': 'C:/tools/bazel/8.0.0',
-                           'Darwin': '/Users/runner/Applications/bazel/8.0.0'}},
+                           'Darwin': None}},
     },
     'premake': {
         "exe": "premake5",
         "default": "5.0.0",
         "5.0.0": {
-            "path": {'Linux': '/usr/share/premake'}
+            "path": {'Linux': None}
         }
     },
     'xcodegen': {"platform": "Darwin"},
@@ -187,7 +205,7 @@ tools_locations = {
         "exe": "qbs",
         "default": "2.6.0",
         "2.6.0": {
-            "path": {'Linux': '/usr/share/qbs/bin'}
+            "path": {'Linux': None}
         }
     },
     "emcc": {},
@@ -300,7 +318,7 @@ def _get_individual_tool(name, version):
         if tool_path is None:
             # will fail the test, not exe found and path None
             cached = True
-    elif tool_path is not None and tool_path not in exe_found:
+    elif tool_path is not None and exe_path is not None and not exe_path.startswith(tool_path):
         # finds the exe in a path that is not the one set in the conf -> fail
         cached = True
     elif tool_path is None:
