@@ -90,8 +90,11 @@ class DetectCompilersTest(unittest.TestCase):
         # result is a list of tuples (name, value) so converting it to dict
         result = dict(result)
         platform_compiler = platform_default_compilers.get(platform.system(), None)
+        detected_compiler = result.get("compiler", None)
         if platform_compiler is not None:
-            self.assertEqual(result.get("compiler", None), platform_compiler)
+            self.assertEqual(detected_compiler, platform_compiler)
+        else:
+            self.assertIsNone(detected_compiler)
 
     @pytest.mark.tool("gcc")
     @pytest.mark.skipif(platform.system() != "Darwin", reason="only OSX test")

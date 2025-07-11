@@ -10,6 +10,7 @@ from conan.test.utils.tools import TestClient
 class TestProfileDetectAPI:
     @pytest.mark.skipif(platform.system() != "Windows", reason="Only for windows")
     @pytest.mark.tool("visual_studio", "17")
+    @pytest.mark.skipif(not detect_api.detect_default_compiler(), reason="Default compiler not detected")
     def test_profile_detect_compiler(self):
 
         client = TestClient()
@@ -47,6 +48,7 @@ class TestProfileDetectAPI:
         assert expected in client.out
 
     @pytest.mark.skipif(platform.system() != "Linux", reason="Only linux")
+    @pytest.mark.skipif(not detect_api.detect_gcc_compiler(), reason="GCC not detected")
     def test_profile_detect_libc(self):
         client = TestClient()
         tpl1 = textwrap.dedent("""
