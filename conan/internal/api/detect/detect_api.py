@@ -505,7 +505,7 @@ def detect_gcc_compiler(compiler_exe="gcc"):
     try:
         if platform.system() == "Darwin":
             # In Mac OS X check if gcc is a fronted using apple-clang
-            _, out = detect_runner(f'"{compiler_exe} --version')
+            _, out = detect_runner(f'"{compiler_exe} --version"')
             out = out.lower()
             if "clang" in out:
                 return None, None, None
@@ -532,11 +532,11 @@ def detect_compiler():
 
 def detect_intel_compiler(compiler_exe="icx"):
     try:
-        ret, out = detect_runner(f'"{compiler_exe} --version')
+        ret, out = detect_runner(f'"{compiler_exe} --version"')
         if ret != 0:
             return None, None
         compiler = "intel-cc"
-        installed_version = re.search(r"(202[0-9]+(\.[0-9])?)", out).group()
+        installed_version = re.search(r"(202[0-9]+(\.[0-9]+)?)", out).group()
         if installed_version:
             ConanOutput(scope="detect_api").info("Found %s %s" % (compiler, installed_version))
             return compiler, Version(installed_version), compiler_exe
@@ -546,13 +546,14 @@ def detect_intel_compiler(compiler_exe="icx"):
 
 def detect_suncc_compiler(compiler_exe="cc"):
     try:
-        _, out = detect_runner(f'"{compiler_exe} -V')
+        _, out = detect_runner(f'"{compiler_exe} -V"')
         compiler = "sun-cc"
         installed_version = re.search(r"Sun C.*([0-9]+\.[0-9]+)", out)
         if installed_version:
             installed_version = installed_version.group(1)
         else:
-            installed_version = re.search(r"([0-9]+\.[0-9]+)", out).group()
+            match = re.search(r"([0-9]+\.[0-9]+)", out)
+            installed_version = match.group() if match else None
         if installed_version:
             ConanOutput(scope="detect_api").info("Found %s %s" % (compiler, installed_version))
             return compiler, Version(installed_version), compiler_exe
@@ -571,7 +572,7 @@ def detect_clang_compiler(compiler_exe="clang"):
             compiler = "clang"
         else:
             return None, None, None
-        installed_version = re.search(r"([0-9]+\.[0-9])", out).group()
+        installed_version = re.search(r"([0-9]+\.[0-9]+)", out).group()
         if installed_version:
             ConanOutput(scope="detect_api").info("Found %s %s" % (compiler, installed_version))
             return compiler, Version(installed_version), compiler_exe
@@ -609,7 +610,7 @@ def detect_cl_compiler(compiler_exe="cl"):
         if not version_regex:
             return None, None, None
         # 19.36.32535 -> 193
-        version = f"{version_regex.group('major')}{version_regex.group('minor')[0]}"
+        version = f"{version_regex.group('major')}{version_regex.group('minor')}"
         return compiler, Version(version), compiler_exe
     except (Exception,):  # to disable broad-except
         return None, None, None
