@@ -55,4 +55,4 @@ class MesonPkgConfigTest(TestMesonBase):
 
         self.assertIn("Hello World Release!", self.t.out)
 
-        self._check_binary()
+        self._check_binary(compiler_version=None)

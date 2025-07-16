@@ -153,7 +153,8 @@ tools_locations = {
         "system": {"path": {'Windows': "C:/tools/cygwin/bin"}},
     },
     'bazel': {
-        "default": "7",
+        "default": "system",
+        "system": {"path": {}},
         "6.5.0": {"path": {'Linux': '/usr/share/bazel-6.5.0/bin',
                            'Windows': 'C:/tools/bazel/6.5.0',
                            'Darwin': '/Users/runner/Applications/bazel/6.5.0'}},
@@ -166,7 +167,8 @@ tools_locations = {
     },
     'premake': {
         "exe": "premake5",
-        "default": "5.0.0",
+        "default": "system",
+        "system": {"path": {}},
         "5.0.0": {
             "path": {'Linux': '/usr/share/premake'}
         }
@@ -185,12 +187,16 @@ tools_locations = {
     },
     "qbs": {
         "exe": "qbs",
-        "default": "2.6.0",
+        "default": "system",
+        "system": {"path": {}},
         "2.6.0": {
             "path": {'Linux': '/usr/share/qbs/bin'}
         }
     },
-    "emcc": {},
+    "emcc": {
+        "default": "system",
+        "system": {"path": {}}
+    },
     "node": {},
     # TODO: Intel oneAPI is not installed in CI yet. Uncomment this line whenever it's done.
     # "intel_oneapi": {
