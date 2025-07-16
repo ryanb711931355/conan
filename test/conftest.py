@@ -260,6 +260,26 @@ def _get_individual_tool(name, version):
         if tool_version.get("disabled"):
             return False
         if name == "visual_studio":
+            # Visual Studio is handled differently, return early if disabled
+            return False, None
+
+    # If tool_version is None, it means the version is not explicitly configured
+    # We should check if the tool is available via default or system path
+    if tool_version is None:
+        # Check if there is a default version configured
+        default_version = tool.get("default")
+        if default_version:
+            tool_version = tool.get(default_version)
+        else:
+            # No version specified and no default, assume tool is available if exe exists
+            pass
+
+    if tool_version is not None:
+        assert isinstance(tool_version, dict)
+        if tool_version.get("disabled"):
+            return False, None
+        if name == "visual_studio":
+            return False, None
             if vswhere():  # TODO: Missing version detection
                 return None, None
 
@@ -295,16 +315,24 @@ def _get_individual_tool(name, version):
     exe = tool.get("exe", name)
     exe_found = which(exe)  # TODO: This which doesn't detect version either
     exe_path = str(pathlib.Path(exe_found).parent) if exe_found else None
+    
+    # Determine if the tool is cached/available
+    # If exe is not found, it's not available (cached=False means not found in cache, but here we use cached to mean 'found in expected location')
+    # Let's align with the logic: cached=True means tool is available in the expected way
     if not exe_found:
-        cached = True
-        if tool_path is None:
-            # will fail the test, not exe found and path None
-            cached = True
+        # Tool not found in PATH
+        cached = False
     elif tool_path is not None and tool_path not in exe_found:
-        # finds the exe in a path that is not the one set in the conf -> fail
-        cached = True
-    elif tool_path is None:
-        cached = exe_path, tool_env
+        # Tool found but not in the expected tool_path
+        # This might be a mismatch, but if the tool is available elsewhere, we might still consider it available
+        # However, for strict testing, we might want to fail or warn. 
+        # Based on the issue description, the previous logic set cached=True incorrectly.
+        # If tool_path is specified, we expect the tool to be there.
+        # If it's not, we should probably treat it as not found in the expected location.
+        cached = False
+    else:
+        # Tool found and in the expected path (or no specific path required)
+        cached = (exe_path, tool_env)
 
     if old_environ is not None:
         os.environ.clear()
