@@ -70,27 +70,27 @@ tools_locations = {
         "3.15": {
             "path": {'Windows': 'C:/tools/cmake/3.15.7/cmake-3.15.7-win64-x64/bin',
                      'Darwin': '/Users/runner/Applications/CMake/3.15.7/bin',
-                     'Linux': '/usr/share/cmake-3.15.7/bin'}
+                     'Linux': None}
         },
         "3.19": {
             "path": {'Windows': 'C:/tools/cmake/3.19.7/cmake-3.19.7-win64-x64/bin',
                      'Darwin': '/Users/runner/Applications/CMake/3.19.7/bin',
-                     'Linux': '/usr/share/cmake-3.19.7/bin'}
+                     'Linux': None}
         },
         "3.23": {
             "path": {'Windows': 'C:/tools/cmake/3.23.5/cmake-3.23.5-windows-x86_64/bin',
                      'Darwin': '/Users/runner/Applications/CMake/3.23.5/bin',
-                     'Linux': "/usr/share/cmake-3.23.5/bin"}
+                     'Linux': None}
         },
         "3.27": {
             "path": {'Windows': 'C:/tools/cmake/3.27.9/cmake-3.27.9-windows-x86_64/bin',
                      'Darwin': '/Users/runner/Applications/CMake/3.27.9/bin',
-                     'Linux': "/usr/share/cmake-3.27.9/bin"}
+                     'Linux': None}
         },
         "4.0": {
             "path": {'Windows': 'C:/tools/cmake/4.0.0-rc3/cmake-4.0.0-rc3-windows-x86_64/bin',
                      'Darwin': '/Users/runner/Applications/CMake/4.0.0-rc3/bin',
-                     'Linux': "/usr/share/cmake-4.0.0-rc3/bin"}
+                     'Linux': None}
         }
     },
     'ninja': {
@@ -154,13 +154,13 @@ tools_locations = {
     },
     'bazel': {
         "default": "7",
-        "6.5.0": {"path": {'Linux': '/usr/share/bazel-6.5.0/bin',
+        "6.5.0": {"path": {'Linux': None,
                            'Windows': 'C:/tools/bazel/6.5.0',
                            'Darwin': '/Users/runner/Applications/bazel/6.5.0'}},
-        "7.4.1": {"path": {'Linux': '/usr/share/bazel-7.4.1/bin',
+        "7.4.1": {"path": {'Linux': None,
                            'Windows': 'C:/tools/bazel/7.4.1',
                            'Darwin': '/Users/runner/Applications/bazel/7.4.1'}},
-        "8.0.0": {"path": {'Linux': '/usr/share/bazel-8.0.0/bin',
+        "8.0.0": {"path": {'Linux': None,
                            'Windows': 'C:/tools/bazel/8.0.0',
                            'Darwin': '/Users/runner/Applications/bazel/8.0.0'}},
     },
@@ -189,7 +189,7 @@ tools_locations = {
         "exe": "qbs",
         "default": "2.6.0",
         "2.6.0": {
-            "path": {'Linux': '/usr/share/qbs/bin'}
+            "path": {'Linux': None}
         }
     },
     "emcc": {},
@@ -276,7 +276,7 @@ def _get_individual_tool(name, version):
         if tool_path == "skip-tests":
             return False
         elif tool_path is not None and not os.path.isdir(tool_path):
-            return True
+            return False
     else:
         if version is not None:  # if the version is specified, it should be in the conf
             return True
@@ -298,10 +298,10 @@ def _get_individual_tool(name, version):
     exe_found = which(exe)  # TODO: This which doesn't detect version either
     exe_path = str(pathlib.Path(exe_found).parent) if exe_found else None
     if not exe_found:
-        cached = True
+        cached = False
         if tool_path is None:
-            # will fail the test, not exe found and path None
-            cached = True
+            # will skip the test, not exe found and path None
+            cached = False
     elif tool_path is not None and tool_path not in exe_found:
         # finds the exe in a path that is not the one set in the conf -> fail
         cached = True
