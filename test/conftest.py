@@ -173,8 +173,8 @@ tools_locations = {
                      'Darwin': 'skip-tests'}
         }
     },
-    'xcodegen': {"platform": "Darwin"},
-    'apt_get': {"exe": "apt-get"},
+    'xcodegen': {"platform": "Darwin", "disabled": True},
+    'apt_get': {"exe": "apt-get", "disabled": True},
     'brew': {},
     'android_ndk': {
         "platform": "Darwin",
@@ -192,8 +192,8 @@ tools_locations = {
             "path": {'Linux': '/usr/share/qbs/bin'}
         }
     },
-    "emcc": {},
-    "node": {},
+    "emcc": {"disabled": True},
+    "node": {"disabled": True},
     # TODO: Intel oneAPI is not installed in CI yet. Uncomment this line whenever it's done.
     # "intel_oneapi": {
     #     "default": "2021.3",
@@ -256,7 +256,7 @@ def _get_individual_tool(name, version):
         return None, None
 
     version = version or tool.get("default")
-    tool_version = tool.get(version)
+    tool_version = tool.get(name, {}).get(version)
     if tool_version is not None:
         assert isinstance(tool_version, dict)
         if tool_version.get("disabled"):
